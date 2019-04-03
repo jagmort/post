@@ -26,9 +26,10 @@ if (in_array($_SERVER['REMOTE_ADDR'], $access) && (sizeof($_POST) > 0)) {
     file_force_contents($raw, print_r($_POST, true) . print_r($_SERVER, true));
     if(isset($_POST['content']) && strlen($_POST['content']) > 0) {
         $line = [];
-        $text = $_POST['content'];
-        foreach($pattern as $p)
-            $text = preg_replace($p, "", $text);
+        $text = preg_replace("/\R/u", "", $_POST['content']);
+        $text = preg_replace("/ГП СПД/u", "ГП&nbsp;СПД", $text);
+        $text = preg_replace("/Российская Федерация ГОС-ВО, /u", "", $text);
+        $text = preg_replace("/(Interaction-\d+) (\d{2})/u", "\\1\n\\2", $text);
         $line = explode("\n", $text);
         $message = "<html>\n<head>\n<meta charset=\"utf-8\"/>\n</head>\n<body>\n<table style=\"font-family:Calibri,Arial,sans-serif;font-size:11pt;border-width:0;border-collapse:collapse\">\n";
         $message2 = '<tr><td colspan="3" style="border-top:1px solid #eee">&nbsp;</td></tr>' . "\n";
@@ -74,9 +75,10 @@ if (in_array($_SERVER['REMOTE_ADDR'], $access) && (sizeof($_POST) > 0)) {
 
     if(isset($_POST['long']) && strlen($_POST['long']) > 0) {
         $line = [];
-        $text = $_POST['content'];
-        foreach($pattern as $p)
-            $text = preg_replace($p, "", $text);
+        $text = preg_replace("/\R/u", "", $_POST['long']);
+        $text = preg_replace("/ГП СПД/u", "ГП&nbsp;СПД", $text);
+        $text = preg_replace("/Российская Федерация ГОС-ВО, /u", "", $text);
+        $text = preg_replace('/(\${3}) (\d{2})/u', "\\1\n\\2", $text);
         $line = explode("\n", $text);
         $message = "<html>\n<head>\n<meta charset=\"utf-8\"/>\n</head>\n<body>\n<table style=\"font-family:Calibri,Arial,sans-serif;font-size:11pt;border-width:0;border-collapse:collapse\">\n";
         $message2 = '<tr><td colspan="3" style="border-top:1px solid #eee">&nbsp;</td></tr>' . "\n";
